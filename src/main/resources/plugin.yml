@@ -1,0 +1,6 @@
+name: Lottery
+main: com.orion31.Lottery.Lottery
+version: 1.0
+commands:
+    lottery:
+        aliases: [lotto]
