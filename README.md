@@ -1,7 +1,7 @@
 # Lottery
 Lottery Plugin for Spigot 1.12.2
 
-[![Latest Build](https://travis-ci.org/Orion31Dev/Lottery.png?branch=master)](https://travis-ci.org/Orion31Dev/Lottery)
+Latest Build: [![Build Status](https://travis-ci.com/Orion31Dev/Lottery.png?branch=master)](https://travis-ci.com/Orion31Dev/Lottery)
 
 ### Upcoming Features:
 Sell prize for tickets [Active]
