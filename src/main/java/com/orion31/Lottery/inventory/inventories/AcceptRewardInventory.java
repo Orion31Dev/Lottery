@@ -8,7 +8,6 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.material.Wool;
 
 import com.orion31.Lottery.inventory.ItemBuilder;
 import com.orion31.Lottery.inventory.LootTable.Reward;
@@ -18,15 +17,13 @@ public class AcceptRewardInventory extends LotteryInventory {
     public static String name = "Accept Prize?";
     public static String cl = "&l";
     
+    @SuppressWarnings("deprecation")
     public static Inventory get(Reward reward) {
 	Inventory inv = createInventory(null, InventoryType.DISPENSER, color(cl + name));
 	
-	Wool acceptWool = new Wool();
-	Wool denyWool = new Wool();
-	acceptWool.setColor(DyeColor.LIME);
-	denyWool.setColor(DyeColor.RED);
-	ItemStack accept = new ItemBuilder().setName(color("&a&lAccept!")).setData(acceptWool).build();
-	ItemStack deny = new ItemBuilder().setName(color("&4&lSell for " + reward.rarity.tickets + " tickets")).setData(denyWool).build();
+
+	ItemStack accept = new ItemBuilder().setItem(Material.WOOL, 1).setName(color("&a&lAccept!")).setDurability(DyeColor.LIME.getWoolData()).build();
+	ItemStack deny = new ItemBuilder().setItem(Material.WOOL, 1).setName(color("&4&lSell for " + reward.rarity.tickets + " tickets")).setDurability(DyeColor.RED.getWoolData()).build();
 	inv.setItem(3, accept);
 	inv.setItem(4, reward.item);
 	inv.setItem(5, deny);
