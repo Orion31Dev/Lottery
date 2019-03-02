@@ -15,7 +15,7 @@ import com.orion31.Lottery.inventory.LootTable.Reward;
 import com.orion31.Lottery.inventory.LotteryInventory;
 
 public class PickChestInventory extends LotteryInventory {
-    public static String name = "Pick a Chest.";
+    public static String name = "Pick a Chest";
     public static String cl = "&l";
     
     public static Inventory get() {

@@ -4,6 +4,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 
 import com.orion31.Lottery.inventory.inventories.AcceptRewardInventory;
 import com.orion31.Lottery.inventory.inventories.PickChestInventory;
@@ -18,6 +19,11 @@ public class InventoryListener implements Listener {
 	e.setCancelled(true);
     }
     	
+    @EventHandler
+    public void onInventoryClose(InventoryCloseEvent e) {
+	if (LotteryInventory.isLotteryInventory(e.getInventory())) LotteryInventory.lotteryInventories.remove(e.getInventory());
+    } 
+    
     private boolean nameEqual(InventoryClickEvent e, String name2) {
 	return ChatColor.stripColor(e.getInventory().getName()).equalsIgnoreCase(ChatColor.stripColor(name2));
     }
