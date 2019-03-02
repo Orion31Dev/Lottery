@@ -47,4 +47,12 @@ public class TicketManager {
 	registeredIds.put(id, player);
 	return id;
     }
+    
+    public static boolean isValid(long id) {
+	return registeredIds.containsKey(id);
+    }
+    
+    public static Player getPlayer(long id) {
+	return registeredIds.get(id);
+    }
 }

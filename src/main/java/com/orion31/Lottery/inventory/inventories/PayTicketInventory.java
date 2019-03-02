@@ -1,5 +1,6 @@
 package com.orion31.Lottery.inventory.inventories;
 
+import static com.orion31.Lottery.Messenger.broadcast;
 import static com.orion31.Lottery.Messenger.color;
 
 import org.bukkit.DyeColor;
@@ -10,33 +11,71 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import com.orion31.Lottery.inventory.ItemBuilder;
-import com.orion31.Lottery.inventory.LootTable.Reward;
 import com.orion31.Lottery.inventory.LotteryInventory;
+import com.orion31.Lottery.inventory.TicketManager;
 
+import net.md_5.bungee.api.ChatColor;
+
+@SuppressWarnings("deprecation")
 public class PayTicketInventory extends LotteryInventory {
     private final static int PRICE = 3;
     
-    public static String name = "Place " + PRICE + " Tickets";
+    public static String name = "Click on " + PRICE + " Tickets";
     public static String cl = "&l";
     
-    @SuppressWarnings("deprecation")
-    public static Inventory get(Reward reward) {
+    public static Inventory get() {
 	Inventory inv = createInventory(null, InventoryType.DISPENSER, color(cl + name));
-	ItemStack accept = new ItemBuilder().setItem(Material.WOOL, 1).setName("&a&lAccept!").setDurability(DyeColor.LIME.getWoolData()).build();
-	ItemStack deny = new ItemBuilder().setItem(Material.WOOL, 1).setName("&4&lSell for " + reward.rarity.tickets + " tickets").setDurability(DyeColor.RED.getWoolData()).build();
-	inv.setItem(3, accept);
-	inv.setItem(4, reward.item);
-	inv.setItem(5, deny);
+	inv.setItem(0, getMissing());
+	inv.setItem(1, getMissing());
+	inv.setItem(2, getMissing());
 	return inv;
     }
-    	
-    public static void onClick(InventoryClickEvent e) {
-	if (e.getCurrentItem().getType() == Material.AIR || e.getCurrentItem() == null) return;
-	if (e.getSlot() == 3) {
-	    e.getWhoClicked().getInventory().addItem(e.getInventory().getItem(4));
-	    e.getWhoClicked().closeInventory();
-	} else if (e.getSlot() == 5) {
-	    e.getWhoClicked().closeInventory();
-	}
+    
+    private static ItemStack getMissing() {
+	return new ItemBuilder().setItem(Material.WOOL, 1).setName("&4&lTicket Needed").setDurability(DyeColor.RED.getWoolData()).build();
     }
+    
+    private static ItemStack getDeposited() {
+	return new ItemBuilder().setItem(Material.WOOL, 1).setName("&a&lTicket Deposited").setDurability(DyeColor.LIME.getWoolData()).build();
+    }
+    
+    public static void onClick(InventoryClickEvent e) {
+	broadcast("A");
+	if (e.getCurrentItem() == null || e.getCurrentItem().getType() != Material.PAPER || !e.getCurrentItem().hasItemMeta()) return;
+	broadcast("B");
+
+	long id = 0;
+	try {
+	    id = Long.parseLong(ChatColor.stripColor(e.getCurrentItem().getItemMeta().getLore().get(0)));
+	} catch (Exception ex) {
+	    ex.printStackTrace();
+	    return;
+	}
+	
+	broadcast("C");
+	
+	if (!TicketManager.isValid(id)) return;
+	broadcast("D");
+
+	if (!TicketManager.getPlayer(id).equals(e.getWhoClicked())) return;
+	broadcast("E");
+
+	int ticketsDeposited = 0; // Get how many tickets have already been deposited.
+	for (ItemStack i : e.getInventory().getContents()) {
+	    if (i == null || i.getType() == Material.AIR) continue;
+	    if (i.getDurability() == DyeColor.LIME.getWoolData()) ticketsDeposited++;
+	}
+	broadcast("F");
+
+	
+	if (ticketsDeposited == 2) {
+	    TicketManager.getPlayer(id).openInventory(PickChestInventory.get());
+	    return;
+	}
+	
+	e.getClickedInventory().remove(e.getCurrentItem());
+	e.getInventory().setItem(ticketsDeposited, getDeposited());
+	
+    }
+    
 }
