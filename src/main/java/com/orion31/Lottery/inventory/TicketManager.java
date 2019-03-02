@@ -48,6 +48,10 @@ public class TicketManager {
 	return id;
     }
     
+    public static void removeId(long id) {
+	registeredIds.remove(id);
+    }
+    
     public static boolean isValid(long id) {
 	return registeredIds.containsKey(id);
     }
