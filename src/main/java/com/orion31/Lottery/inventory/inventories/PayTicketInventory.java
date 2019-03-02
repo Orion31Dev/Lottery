@@ -1,6 +1,5 @@
 package com.orion31.Lottery.inventory.inventories;
 
-import static com.orion31.Lottery.Messenger.broadcast;
 import static com.orion31.Lottery.Messenger.color;
 
 import org.bukkit.DyeColor;
@@ -40,9 +39,7 @@ public class PayTicketInventory extends LotteryInventory {
     }
     
     public static void onClick(InventoryClickEvent e) {
-	broadcast("A");
 	if (e.getCurrentItem() == null || e.getCurrentItem().getType() != Material.PAPER || !e.getCurrentItem().hasItemMeta()) return;
-	broadcast("B");
 
 	long id = 0;
 	try {
@@ -52,20 +49,15 @@ public class PayTicketInventory extends LotteryInventory {
 	    return;
 	}
 	
-	broadcast("C");
 	
 	if (!TicketManager.isValid(id)) return;
-	broadcast("D");
-
 	if (!TicketManager.getPlayer(id).equals(e.getWhoClicked())) return;
-	broadcast("E");
 
 	int ticketsDeposited = 0; // Get how many tickets have already been deposited.
 	for (ItemStack i : e.getInventory().getContents()) {
 	    if (i == null || i.getType() == Material.AIR) continue;
 	    if (i.getDurability() == DyeColor.LIME.getWoolData()) ticketsDeposited++;
 	}
-	broadcast("F");
 
 	
 	if (ticketsDeposited == 2) {
