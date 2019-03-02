@@ -4,7 +4,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import com.orion31.Lottery.inventory.inventories.PickChestInventory;
+import com.orion31.Lottery.inventory.inventories.PayTicketInventory;
 
 public class CommandPlay extends ALotteryCommand {
 	
@@ -17,7 +17,7 @@ public class CommandPlay extends ALotteryCommand {
 	    if (!(sender instanceof Player)) throw new PlayerOnlyException();
 	    
 	    Player p = (Player) sender;
-	    p.openInventory(PickChestInventory.get());
+	    p.openInventory(PayTicketInventory.get());
 	    return true;
 	}
 

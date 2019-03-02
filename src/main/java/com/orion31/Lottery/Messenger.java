@@ -7,7 +7,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.orion31.Lottery.commands.ALotteryCommand;
-import com.orion31.Lottery.commands.CommandHandler;
+import com.orion31.Lottery.commands.CommandManager;
 import com.orion31.Lottery.inventory.LootTable.Reward;
 
 public class Messenger {
@@ -15,16 +15,6 @@ public class Messenger {
 	public static final char colorChar = '&';
 	public static String tag = "&c&lLottery >> &r";
 	public static String consoleTag = "[Lottery]: ";
-	
-	public static void msg(String msg, Player player, Object... objects) {
-		msg = String.format(msg, objects);
-		msg(msg, player);
-	}
-	
-	public static void msg(String msg, Player player) {
-		msg = color(msg);
-		player.sendMessage(msg);
-	}
 	
 	public static void msg(String msg, CommandSender sender, Object... objects) {
 		msg = String.format(msg, objects);
@@ -36,15 +26,6 @@ public class Messenger {
 		sender.sendMessage(msg);
 	}
 	
-	public static void ghost(String msg, Player player, Object... objects) {
-		msg = String.format(msg, objects);
-		msg(msg, player);
-	}
-	
-	public static void ghost(String msg, Player player) {
-		msg = color(msg);
-		player.sendMessage(msg);
-	}
 	
 	public static void ghost(String msg, CommandSender sender, Object... objects) {
 		msg = String.format(msg, objects);
@@ -83,7 +64,7 @@ public class Messenger {
 	
 	public static void help(CommandSender sender) {
 	    msg("Lottery Commands:", sender);
-	    for (ALotteryCommand command : CommandHandler.getCommands().values()) 
+	    for (ALotteryCommand command : CommandManager.getCommands().values()) 
 		ghost(command.getUsage() + ": " + command.getDesc(), sender);
 	}
 	

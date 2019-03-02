@@ -1,13 +1,12 @@
 package com.orion31.Lottery.commands;
 
-import static com.orion31.Lottery.Messenger.*;
+import static com.orion31.Lottery.Messenger.console;
 
 import java.util.HashMap;
 
-public class CommandHandler {
+public class CommandManager {
 	
 	private static HashMap<String, ALotteryCommand> registeredCommands = new HashMap<String, ALotteryCommand>(); 
-	
 	
 	public static void registerCommand(ALotteryCommand command) {
 		registeredCommands.put(command.getName(), command);

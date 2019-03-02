@@ -1,29 +1,30 @@
 package com.orion31.Lottery.inventory;
 
+import static com.orion31.Lottery.Messenger.color;
+
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.material.MaterialData;
 
 public class ItemBuilder {
     
     private Material type = null;
-    private MaterialData data = null;
+    private short durability = -1;
     private int quantity = 1;
     private String name = null;
     private List<String> lore = null;
     private boolean unbreakable = false;
     
     public ItemBuilder() {
-	
     }
     
     public ItemBuilder(ItemStack itemStack) {
 	type = itemStack.getType();
-	data = itemStack.getData();
+	durability = itemStack.getDurability();
 	quantity = itemStack.getAmount();
 	name = itemStack.getItemMeta().getDisplayName();
 	lore = itemStack.getItemMeta().getLore();
@@ -36,12 +37,13 @@ public class ItemBuilder {
     }
     
     public ItemBuilder setLore(String... lore) {
-	this.lore = Arrays.asList(lore);
-	return this;
+	return setLore(Arrays.asList(lore));
     }
     
     public ItemBuilder setLore(List<String> lore) {
-	this.lore = lore;
+	List<String> lore2 = new ArrayList<String>();
+	for(String s : lore) lore2.add(color("&r" + s));
+	this.lore = lore2;
 	return this;
     }
     
@@ -50,8 +52,8 @@ public class ItemBuilder {
 	return this;
     }
     
-    public ItemBuilder setData(MaterialData data) {
-	this.data = data;
+    public ItemBuilder setDurability(short durability) {
+	this.durability = durability;
 	return this;
     }
     
@@ -64,12 +66,12 @@ public class ItemBuilder {
 
     public ItemStack build() {
 	ItemStack itemStack = new ItemStack(type, quantity);
-	itemStack.setData(data);
 	ItemMeta itemMeta = itemStack.getItemMeta();
-	if (name != null) itemMeta.setDisplayName(name);
+	if (name != null) itemMeta.setDisplayName(color(name));
 	if (lore != null) itemMeta.setLore(lore);
 	itemMeta.setUnbreakable(unbreakable);
 	itemStack.setItemMeta(itemMeta);
+	if (durability != -1) itemStack.setDurability(durability);;
 	return itemStack;
     }
  }

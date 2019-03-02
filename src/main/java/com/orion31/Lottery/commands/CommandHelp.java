@@ -16,7 +16,7 @@ public class CommandHelp extends ALotteryCommand {
 	    if (args.length > 1) {
 		ALotteryCommand command;
 		try {
-		    command = CommandHandler.getCommand(args[1]);
+		    command = CommandManager.getCommand(args[1]);
 		} catch (CommandNotFoundException e) {
 		    msg(e.getMessage(), sender);
 		    return false;
