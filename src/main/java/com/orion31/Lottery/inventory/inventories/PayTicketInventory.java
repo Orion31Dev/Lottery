@@ -58,16 +58,15 @@ public class PayTicketInventory extends LotteryInventory {
 	    if (i == null || i.getType() == Material.AIR) continue;
 	    if (i.getDurability() == DyeColor.LIME.getWoolData()) ticketsDeposited++;
 	}
-
+	
+	e.getClickedInventory().remove(e.getCurrentItem());
+	e.getInventory().setItem(ticketsDeposited, getDeposited());
+	
 	
 	if (ticketsDeposited == 2) {
 	    TicketManager.getPlayer(id).openInventory(PickChestInventory.get());
 	    return;
 	}
-	
-	e.getClickedInventory().remove(e.getCurrentItem());
-	e.getInventory().setItem(ticketsDeposited, getDeposited());
-	
     }
     
 }
