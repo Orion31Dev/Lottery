@@ -48,8 +48,7 @@ public class PayTicketInventory extends LotteryInventory {
 	    ex.printStackTrace();
 	    return;
 	}
-	
-	
+		
 	if (!TicketManager.isValid(id)) return;
 	if (!TicketManager.getPlayer(id).equals(e.getWhoClicked())) return;
 
@@ -58,10 +57,10 @@ public class PayTicketInventory extends LotteryInventory {
 	    if (i == null || i.getType() == Material.AIR) continue;
 	    if (i.getDurability() == DyeColor.LIME.getWoolData()) ticketsDeposited++;
 	}
+
 	
 	e.getClickedInventory().remove(e.getCurrentItem());
 	e.getInventory().setItem(ticketsDeposited, getDeposited());
-	
 	
 	if (ticketsDeposited == 2) {
 	    TicketManager.getPlayer(id).openInventory(PickChestInventory.get());
