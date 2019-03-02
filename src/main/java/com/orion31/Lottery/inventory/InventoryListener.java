@@ -18,7 +18,7 @@ public class InventoryListener implements Listener {
 	if (!LotteryInventory.isLotteryInventory(e.getInventory())) return;
 	if (nameEqual(e.getClickedInventory(), PickChestInventory.name)) PickChestInventory.onClick(e);
 	else if (nameEqual(e.getClickedInventory(), AcceptRewardInventory.name)) AcceptRewardInventory.onClick(e);
-	else if (nameEqual(e.getInventory(), PayTicketInventory.name)) PayTicketInventory.onClick(e);;
+	else if (nameEqual(e.getClickedInventory(), PayTicketInventory.name)) PayTicketInventory.onClick(e);;
 	e.setCancelled(true);
     }
     	

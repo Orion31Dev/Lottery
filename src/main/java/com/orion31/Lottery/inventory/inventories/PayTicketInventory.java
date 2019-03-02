@@ -1,7 +1,6 @@
 package com.orion31.Lottery.inventory.inventories;
 
 import static com.orion31.Lottery.Messenger.color;
-import static com.orion31.Lottery.Messenger.msg;
 
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
@@ -13,10 +12,7 @@ import org.bukkit.inventory.ItemStack;
 
 import com.orion31.Lottery.inventory.ItemBuilder;
 import com.orion31.Lottery.inventory.LotteryInventory;
-import com.orion31.Lottery.inventory.Ticket;
 import com.orion31.Lottery.inventory.TicketManager;
-
-import net.md_5.bungee.api.ChatColor;
 
 @SuppressWarnings("deprecation")
 public class PayTicketInventory extends LotteryInventory {
@@ -25,11 +21,13 @@ public class PayTicketInventory extends LotteryInventory {
     public static String name = "Click on " + PRICE + " Tickets";
     public static String cl = "&l";
 
-    public static Inventory get() {
+    public static Inventory get(Player player) {
 	Inventory inv = createInventory(null, InventoryType.DISPENSER, color(cl + name));
 	inv.setItem(0, getMissing());
 	inv.setItem(1, getMissing());
 	inv.setItem(2, getMissing());
+	inv.setItem(8, TicketManager.getTicketsItem(player));
+
 	return inv;
     }
 
@@ -48,30 +46,7 @@ public class PayTicketInventory extends LotteryInventory {
 		|| (e.getCurrentItem().getType() != Material.PAPER && e.getCurrentItem().getType() != Material.WOOL))
 	    return;
 
-	if (e.getCurrentItem().getType() == Material.WOOL) {
-	    if (e.getCurrentItem().getDurability() == DyeColor.LIME.getWoolData()) {
-		Ticket t = TicketManager.getRegisteredTicket((Player) e.getWhoClicked());
-		e.getWhoClicked().getInventory().addItem(t.ticket);
-		msg("Given Ticket " + t.id, e.getWhoClicked());
-		e.getInventory().setItem(e.getSlot(), getMissing());
-	    }
-	    return;
-	}
-
-	long id = 0;
-	try {
-	    id = Long.parseLong(ChatColor.stripColor(e.getCurrentItem().getItemMeta().getLore().get(0)));
-	} catch (Exception ex) {
-	    ex.printStackTrace();
-	    return;
-	}
-
-	if (!TicketManager.isValid(id))
-	    return;
-	if (!TicketManager.getPlayer(id).equals(e.getWhoClicked()))
-	    return;
-
-	int ticketsDeposited = 0; // Get how many tickets have already been deposited.
+	int ticketsDeposited = 0;
 	for (ItemStack i : e.getInventory().getContents()) {
 	    if (i == null || i.getType() == Material.AIR)
 		continue;
@@ -79,11 +54,22 @@ public class PayTicketInventory extends LotteryInventory {
 		ticketsDeposited++;
 	}
 
-	e.getClickedInventory().remove(e.getCurrentItem());
-	e.getInventory().setItem(ticketsDeposited, getDeposited());
+	if (e.getCurrentItem().getType() == Material.WOOL) {
+	    if (e.getCurrentItem().getDurability() == DyeColor.LIME.getWoolData()) {
+		TicketManager.giveTicket((Player) e.getWhoClicked(), 1);
+		e.getInventory().setItem(ticketsDeposited - 1, getMissing());
+		e.getInventory().setItem(8, TicketManager.getTicketsItem((Player) e.getWhoClicked()));
+	    }
+	    return;
+	}
 
-	if (ticketsDeposited == 2) {
-	    TicketManager.getPlayer(id).openInventory(PickChestInventory.get());
+	if (TicketManager.removeTickets((Player) e.getWhoClicked(), 1)) {
+	    e.getInventory().setItem(8, TicketManager.getTicketsItem((Player) e.getWhoClicked()));
+	    e.getInventory().setItem(ticketsDeposited++, getDeposited());
+	}
+
+	if (ticketsDeposited == 3) {
+	    e.getWhoClicked().openInventory(PickChestInventory.get());
 	    return;
 	}
     }

@@ -7,56 +7,59 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapelessRecipe;
 
 public class TicketManager {
-    
+
     private static Random idGenerator = new Random();
-    private static HashMap<Long, Player> registeredIds = new HashMap<Long, Player>();
+    private static HashMap<Player, Integer> playerTickets = new HashMap<Player, Integer>();
     private static long sessionDefaultId;
-    
+
     public static void init(NamespacedKey nKey) {
 	sessionDefaultId = idGenerator.nextLong();
-	ShapelessRecipe recipe = new ShapelessRecipe(nKey, getTicket(3).ticket);
+	ShapelessRecipe recipe = new ShapelessRecipe(nKey, getUnregTicket(3));
 	Bukkit.addRecipe(recipe.addIngredient(2, Material.DIAMOND).addIngredient(Material.PAPER));
     }
-    
-    public static Ticket getTicket(int quantity) {
-	return new Ticket(new ItemBuilder().setItem(Material.PAPER, quantity)
-		.setName("&c&lUnregistered Lottery Ticket")
-		.setLore(String.valueOf(sessionDefaultId), "Register with /lottery register", "Valid until Server Reset")
-		.build(), sessionDefaultId);
+
+    public static ItemStack getUnregTicket(int quantity) {
+	return new ItemBuilder().setItem(Material.PAPER, quantity).setName("&c&lUnregistered Lottery Ticket")
+		.setLore(String.valueOf(sessionDefaultId), "&aClick to Register").build();
     }
-    
-    public static Ticket getRegisteredTicket(Player player) {
-	long id = getId(player);
-	return new Ticket(new ItemBuilder().setItem(Material.PAPER, 1)
-		.setName("&a&lLottery Ticket")
-		.setLore(String.valueOf(id), "Redeemable only by " + player.getDisplayName(), "Valid until Server Reset").build(), id);
-    }
-    
+
     public static long getDefaultId() {
 	return sessionDefaultId;
     }
-    
-    public static long getId(Player player) {
-	long id;
-	do {
-	     id = idGenerator.nextLong();
-	} while(id == sessionDefaultId || registeredIds.containsKey(id));
-	registeredIds.put(id, player);
-	return id;
+
+    public static int giveTicket(Player player, int tickets) {
+	if (!playerTickets.containsKey(player)) {
+	    playerTickets.put(player, tickets);
+	    return tickets;
+	}
+	int newTickets = playerTickets.get(player) + tickets;
+	playerTickets.put(player, tickets);
+	return newTickets;
+    }
+
+    public static boolean removeTickets(Player player, int tickets) {
+	if (!playerTickets.containsKey(player))
+	    return false;
+	int newCount = playerTickets.get(player) - tickets;
+	if (newCount < 0) return false; // Check to see if the player can afford the transaction.
+	playerTickets.put(player, newCount);
+	return true;
+    }
+
+    public static int getTickets(Player player) {
+	if (!playerTickets.containsKey(player)) return 0;
+	return playerTickets.get(player);
     }
     
-    public static void removeId(long id) {
-	registeredIds.remove(id);
-    }
-    
-    public static boolean isValid(long id) {
-	return registeredIds.containsKey(id);
-    }
-    
-    public static Player getPlayer(long id) {
-	return registeredIds.get(id);
+    public static ItemStack getTicketsItem(Player player) {
+	return new ItemBuilder()
+		.setItem(Material.PAPER, getTickets(player))
+		.setName("&6&l" + getTickets(player) + " Tickets")
+		.setLore("&aClick to Spend")
+		.glow().build();
     }
 }

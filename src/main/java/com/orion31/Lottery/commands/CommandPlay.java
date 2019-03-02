@@ -16,8 +16,8 @@ public class CommandPlay extends ALotteryCommand {
 	public boolean run(CommandSender sender, Command cmd, String label, String[] args) throws PlayerOnlyException {
 	    if (!(sender instanceof Player)) throw new PlayerOnlyException();
 	    
-	    Player p = (Player) sender;
-	    p.openInventory(PayTicketInventory.get());
+	    Player player = (Player) sender;
+	    player.openInventory(PayTicketInventory.get(player));
 	    return true;
 	}
 

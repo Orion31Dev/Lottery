@@ -10,6 +10,8 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import com.orion31.Lottery.Glow;
+
 public class ItemBuilder {
     
     private Material type = null;
@@ -17,6 +19,7 @@ public class ItemBuilder {
     private int quantity = 1;
     private String name = null;
     private List<String> lore = null;
+    boolean glow = false;
     private boolean unbreakable = false;
     
     public ItemBuilder() {
@@ -52,6 +55,11 @@ public class ItemBuilder {
 	return this;
     }
     
+    public ItemBuilder glow() {
+	glow = true;
+	return this;
+    }
+    
     public ItemBuilder setDurability(short durability) {
 	this.durability = durability;
 	return this;
@@ -69,6 +77,7 @@ public class ItemBuilder {
 	ItemMeta itemMeta = itemStack.getItemMeta();
 	if (name != null) itemMeta.setDisplayName(color(name));
 	if (lore != null) itemMeta.setLore(lore);
+	if (glow) itemMeta.addEnchant(new Glow(), 1, true);
 	itemMeta.setUnbreakable(unbreakable);
 	itemStack.setItemMeta(itemMeta);
 	if (durability != -1) itemStack.setDurability(durability);;
