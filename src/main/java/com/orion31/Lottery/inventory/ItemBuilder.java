@@ -1,5 +1,8 @@
 package com.orion31.Lottery.inventory;
 
+import static com.orion31.Lottery.Messenger.color;
+
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -34,12 +37,13 @@ public class ItemBuilder {
     }
     
     public ItemBuilder setLore(String... lore) {
-	this.lore = Arrays.asList(lore);
-	return this;
+	return setLore(Arrays.asList(lore));
     }
     
     public ItemBuilder setLore(List<String> lore) {
-	this.lore = lore;
+	List<String> lore2 = new ArrayList<String>();
+	for(String s : lore) lore2.add(color("&r" + s));
+	this.lore = lore2;
 	return this;
     }
     
@@ -63,7 +67,7 @@ public class ItemBuilder {
     public ItemStack build() {
 	ItemStack itemStack = new ItemStack(type, quantity);
 	ItemMeta itemMeta = itemStack.getItemMeta();
-	if (name != null) itemMeta.setDisplayName(name);
+	if (name != null) itemMeta.setDisplayName(color(name));
 	if (lore != null) itemMeta.setLore(lore);
 	itemMeta.setUnbreakable(unbreakable);
 	itemStack.setItemMeta(itemMeta);

@@ -20,7 +20,7 @@ public class PickChestInventory extends LotteryInventory {
     
     public static Inventory get() {
 	Inventory inv = createInventory(null, InventoryType.DISPENSER, color(cl + name));
-	ItemStack chest = new ItemBuilder().setItem(Material.CHEST, 1).setName(color("&6&lOpen Me!")).build();
+	ItemStack chest = new ItemBuilder().setItem(Material.CHEST, 1).setName("&6&lOpen Me!").build();
 	inv.setItem(3, chest);
 	inv.setItem(4, chest);
 	inv.setItem(5, chest);

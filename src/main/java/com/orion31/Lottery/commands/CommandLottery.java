@@ -1,6 +1,6 @@
 package com.orion31.Lottery.commands;
 
-import static com.orion31.Lottery.commands.CommandHandler.getCommand;
+import static com.orion31.Lottery.commands.CommandManager.getCommand;
 import static com.orion31.Lottery.Messenger.*;
 
 import org.bukkit.command.Command;
@@ -15,9 +15,8 @@ public class CommandLottery extends ALotteryCommand implements CommandExecutor {
 		
 	@Override
 	public boolean run(CommandSender sender, Command cmd, String label, String[] args) throws CommandNotFoundException, PlayerOnlyException {
-	    if (args.length == 0 || args[0].equalsIgnoreCase("help")) return run("help", sender, cmd, label, args);
-	    else if (args[0].equalsIgnoreCase("play")) return run("play", sender, cmd, label, args);
-		throw new CommandNotFoundException();
+	    if (args.length == 0) return run("help", sender, cmd, label, args);
+	    else return run(args[0], sender, cmd, label, args);
 		
 	}
 	
