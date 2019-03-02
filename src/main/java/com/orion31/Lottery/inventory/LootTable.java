@@ -1,17 +1,18 @@
 package com.orion31.Lottery.inventory;
 
+import static com.orion31.Lottery.Messenger.color;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
 import org.bukkit.Sound;
 import org.bukkit.inventory.ItemStack;
 
-import static com.orion31.Lottery.Messenger.*;
-
 
 public class LootTable {
     private static ArrayList<Reward> drops = new ArrayList<Reward>();
-    
+    private static HashMap<ItemStack, Rarity> dropRewards = new HashMap<ItemStack, Rarity>();
     public static Reward getReward() {
 	Random rnd = new Random();
 	return drops.get(rnd.nextInt(drops.size()));
@@ -26,6 +27,11 @@ public class LootTable {
     public static void addLoot(Reward reward) {
 	for (int i = 0; i < reward.rarity.timesAdded; i++)
 	    drops.add(reward);
+	dropRewards.put(reward.item, reward.rarity);
+    }
+    
+    public static Rarity getRarity(ItemStack item) {
+	return dropRewards.get(item);
     }
     
     public static void clearLoot() {

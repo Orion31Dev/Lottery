@@ -4,14 +4,17 @@ import static com.orion31.Lottery.Messenger.color;
 
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import com.orion31.Lottery.inventory.ItemBuilder;
+import com.orion31.Lottery.inventory.LootTable;
 import com.orion31.Lottery.inventory.LootTable.Reward;
 import com.orion31.Lottery.inventory.LotteryInventory;
+import com.orion31.Lottery.inventory.TicketManager;
 
 public class AcceptRewardInventory extends LotteryInventory {
     public static String name = "Accept Prize?";
@@ -29,11 +32,12 @@ public class AcceptRewardInventory extends LotteryInventory {
     }
     	
     public static void onClick(InventoryClickEvent e) {
-	if (e.getCurrentItem().getType() == Material.AIR || e.getCurrentItem() == null) return;
+	if (e.getCurrentItem() == null || e.getCurrentItem().getType() == Material.AIR) return;
 	if (e.getSlot() == 3) {
 	    e.getWhoClicked().getInventory().addItem(e.getInventory().getItem(4));
 	    e.getWhoClicked().closeInventory();
 	} else if (e.getSlot() == 5) {
+	    TicketManager.giveTicket((Player) e.getWhoClicked(), LootTable.getRarity(e.getInventory().getItem(4)).tickets);
 	    e.getWhoClicked().closeInventory();
 	}
     }

@@ -10,6 +10,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapelessRecipe;
 
+import static com.orion31.Lottery.Messenger.*;
+
 public class TicketManager {
 
     private static Random idGenerator = new Random();
@@ -24,7 +26,7 @@ public class TicketManager {
 
     public static ItemStack getUnregTicket(int quantity) {
 	return new ItemBuilder().setItem(Material.PAPER, quantity).setName("&c&lUnregistered Lottery Ticket")
-		.setLore(String.valueOf(sessionDefaultId), "&aClick to Register").build();
+		.setLore(String.valueOf(sessionDefaultId), "&aClick to Register").glow().build();
     }
 
     public static long getDefaultId() {
@@ -32,12 +34,13 @@ public class TicketManager {
     }
 
     public static int giveTicket(Player player, int tickets) {
+	msg("Given &a" + tickets + "&r " + ((tickets == 1) ? "ticket." : "tickets."), player);
 	if (!playerTickets.containsKey(player)) {
 	    playerTickets.put(player, tickets);
 	    return tickets;
 	}
 	int newTickets = playerTickets.get(player) + tickets;
-	playerTickets.put(player, tickets);
+	playerTickets.put(player, newTickets);
 	return newTickets;
     }
 
@@ -47,6 +50,7 @@ public class TicketManager {
 	int newCount = playerTickets.get(player) - tickets;
 	if (newCount < 0) return false; // Check to see if the player can afford the transaction.
 	playerTickets.put(player, newCount);
+	msg("Charged &c" + tickets + "&r " + ((tickets == 1) ? "ticket." : "tickets."), player);
 	return true;
     }
 
@@ -57,7 +61,7 @@ public class TicketManager {
     
     public static ItemStack getTicketsItem(Player player) {
 	return new ItemBuilder()
-		.setItem(Material.PAPER, getTickets(player))
+		.setItem(Material.PAPER, (getTickets(player) > 64) ? 64 : getTickets(player))
 		.setName("&6&l" + getTickets(player) + " Tickets")
 		.setLore("&aClick to Spend")
 		.glow().build();
